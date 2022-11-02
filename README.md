@@ -63,10 +63,142 @@ class ClassWithPrivateField
 - `public`::どこからでもアクセスする事が可能
 - `protected`::設定したクラス内部、またはそのクラスを継承したクラスでのみアクセスする事が可能
 - `private`::クラス内部のみでアクセス可能
-- `static`::
+- `static`についてはここでは詳細は省く
 
-###### ざっくりと、クラスを使うメリットとデメリット
+###### ざっくりと、クラスを使うメリット
 
-- 
+- 上述した様に、変数の値を"ある程度"想定しない値から守る事が出来る。
 - 相互に関係し合うデータ(インスタンス変数)と処理(メソッド/関数)を纏める一つの粒度(固まり)まとめる事が出来る。
 
+```php
+class Response extends FundamentalPHP
+{
+
+    protected
+        $_headers,
+        $_headers_sent,
+        $_protocol,
+        $_status_code,
+        $_status_text;
+
+    /**
+     * 
+     */
+    public function __construct()
+    {
+        $this->_status_code = 200;
+        $this->_status_text = "OK";
+        $this->_protocol = isset($_SERVER["SERVER_PROTOCOL"]) ? $_SERVER["SERVER_PROTOCOL"] : "HTTP/1.1";
+        $this->_headers = (array) function_exists("apache_response_headers") ? apache_response_headers() : [];
+        /* $this->_headers_sent = (bool) function_exists("headers_sent") && headers_sent(); */
+    }
+
+    /**
+     * 設定されたステータスコードとヘッダを送信する
+     * @param array $headers
+     * @param type $status_code
+     * @param type $status_text
+     * @throws HeaderAlreadySentException
+     */
+    public function send(array $headers = [], $status_code = null, $status_text = null)
+    {
+        if ($this->_headers_sent)
+            throw new HeaderAlreadySentException("Headers already sent,cant send headers");
+        $this->_headers = array_merge($this->_headers, $headers);
+        $this->_status_code = !is_null($status_code) ? $status_code : $this->_status_code;
+        $this->_status_text = !is_null($status_text) ? $status_text : $this->_status_text;
+
+        function_exists("http_response_code") ?
+            http_response_code($this->_status_code) :
+            header($this->_protocol . " " . $this->_status_code . " " . $this->_status_text);
+        function_exists("header_register_callback") ? header_register_callback(function () {
+            array_map(function ($name, $value) {
+                header($name . ": " . $value);
+            }, array_keys($this->_headers), array_values($this->_headers));
+        }) : array_map(function ($name, $value) {
+            header($name . ": " . $value);
+        }, array_keys($this->_headers), array_values($this->_headers));
+        $this->_headers_sent = true;
+    }
+
+    /**
+     * 
+     * @return bool
+     */
+    public function isHeadersSent()
+    {
+        return (bool) $this->_headers_sent;
+    }
+
+    /**
+     * 
+     * @param type $name
+     * @param type $value
+     * @throws HeaderAlreadySentException
+     */
+    public function setHeader($name, $value)
+    {
+        if ($this->isHeadersSent())
+            throw new Exception("Headers already sent,can not set headers");
+        $this->_headers[$name] = $value;
+    }
+
+    /**
+     * 
+     * @param array $headers
+     * @return array
+     */
+    public function setHeaders(array $headers)
+    {
+        return array_map([$this, rtrim(__FUNCTION__, "s")], array_keys($headers), array_values($headers));
+    }
+
+    /**
+     * 
+     * @param type $code
+     * @param type $text
+     */
+    public function setStatusCode($code = 200, $text = "")
+    {
+        $this->_status_code = (int) $code;
+        $this->_status_text = (string) $text;
+    }
+
+    /**
+     * 
+     * @param type $name
+     * @throws Exception
+     */
+    public function removeHeader($name)
+    {
+        if ($this->isHeadersSent())
+            throw new Exception("Headers already sent,can not set headers");
+        if (array_key_exists($name, $this->_headers))
+            unset($this->_headers[$name]);
+        if (function_exists("header_remove"))
+            header_remove($name);
+    }
+
+    /**
+     * 
+     * @return type
+     */
+    public function getHeaders()
+    {
+        return (array) $this->_headers;
+    }
+
+    /**
+     * 
+     * @param type $name
+     * @return type
+     */
+    public function getHeader($name)
+    {
+        return array_key_exists($name, $this->_headers) ? $this->_headers[$name] : null;
+    }
+}
+
+```
+
+> PHPで受け取ったリクエスト(GETとかPOSTとか)
