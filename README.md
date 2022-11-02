@@ -1,6 +1,6 @@
 #### クラス設計について(Web班第三回勉強会)
 
-###### クラスを構成する要素
+###### クラスを構成する主な要素
 - プロパティ
   - インスタンス変数(クラスを`new`等でインスタンス化した際、実体を持つ変数)
   - クラス変数(`static`修飾子が付いたプロパティ、定義した時点で実体を持つ)
@@ -12,7 +12,7 @@
 
 > 注意しなければならない点は、クラス変数、クラスメソッドはインスタンス変数を使った処理が出来ないと言う事。
 
-###### Example
+###### ざっくりとしたクラスの構造と効能
 
 ###### javascript
 
@@ -25,8 +25,11 @@ class ClassWithPrivateField {
     this.#privateField = params;
   }
   
-    /* インスタンスメソッド */
-    hogehoge_method() {}
+   /* インスタンスメソッド */
+   hogehoge_method() {}
+   
+   /* インスタンス変数を取得するメソッド */
+   getprivateField(){ return this.#privateField; }
 }
 
 const instance = new ClassWithPrivateField("コンストラクタに渡す値")
@@ -44,7 +47,9 @@ class ClassWithPrivateField
     }
     
     /* インスタンスメソッド */
-    public function hogehoge_method() : bool{}
+    protected function hogehoge_method() : bool{}
+    
+    public function getprivateField() { return $this->privateField; }
 }
 ```
 
