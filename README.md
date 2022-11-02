@@ -7,12 +7,45 @@
 - メソッド
   - インスタンスメソッド(クラスをインスタンス化した際、実体を持つメソッド)
   - クラスメソッド(`static`修飾子が付いたメソッド、定義した時点で実体を持つ)
+  - コンストラクタ(クラスをnew等でインスタンス化した際に実行されるメソッド)
+  - デストラクタ(インスタンスを破棄する際、実行される。言語によるが、最近はガベージコレクションが有能なため、あまり自前で実装する事は無い)
 
 > 注意しなければならない点は、クラス変数、クラスメソッドはインスタンス変数を使った処理が出来ないと言う事。
 
 ###### Example
 
+###### javascript
+
 ```javascript
+class ClassWithPrivateField {
+  #privateField; /* インスタンス変数 */
+  
+  /* コンストラクタ、newでインスタンス化する際、実行される */
+  constructor(params) {
+    this.#privateField = params;
+  }
+  
+    /* インスタンスメソッド */
+    hogehoge_method() {}
+}
+
+const instance = new ClassWithPrivateField("コンストラクタに渡す値")
+```
+
+```php
+class ClassWithPrivateField
+{
+    private $privateField; /* インスタンス変数 */
+
+    /* コンストラクタ、newでインスタンス化する際、実行される */
+    public function __construct($params)
+    {
+        $this->privateField = $params;
+    }
+    
+    /* インスタンスメソッド */
+    public function hogehoge_method() : bool{}
+}
 ```
 
 ###### ざっくりと、クラスを使うメリットとデメリット
