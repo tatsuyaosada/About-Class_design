@@ -26,11 +26,9 @@ $instance = new SomeClass();
   - コンストラクタ(クラスをnew等でインスタンス化した際に実行されるメソッド)
   - デストラクタ(インスタンスを破棄する際、実行される。言語によるが、最近はガベージコレクションが有能なため、あまり自前で実装する事は無い)
 
-> 注意しなければならない点は、クラス変数、クラスメソッドはインスタンス変数を使った処理が出来ないと言う事。
-
 ###### クラスの構造と効能(javascriptとPHPを例として)
-
-###### javascript
+<details>
+<summary>javascript</summary>
 
 ```javascript
 class ClassWithPrivateField {
@@ -53,6 +51,10 @@ const instance = new ClassWithPrivateField("コンストラクタに渡す値");
 instance.hogehoge_method();
 instance.getprivateField(); /* コンストラクタで代入された「コンストラクタに渡す値」が取得される */
 ```
+</details>
+
+<details>
+<summary>PHP</summary>
 
 ```php
 class ClassWithPrivateField
@@ -77,7 +79,8 @@ $instance = new ClassWithPrivateField("コンストラクタに渡す値");
 $instance.hogehoge_method();
 instance.getprivateField(); /* コンストラクタで代入された「コンストラクタに渡す値」が取得される */
 ```
-
+</>
+  
 > それぞれ違う言語なので仕様による多少の違いはあるが、大体こんな感じに似通った感じになる。と同時に、ここでクラスと言う粒度を用いる最も重要な仕様の一つが言語化されている。上記のコードのインスタンス変数は両者とも`private`と言う修飾子が与えられている。このインスタンス変数は、このクラスの外部からは全く触れる事の出来ない状態になっていると言う事になり、要はクラス外部(正確にはインスタンスの外部)からは一切触る事が出来ないため、一般的な手続き型の変数と比べ、堅牢度が高い。
 
 > 続いて、`getprivateField`を見て欲しい。これは`public`と言うアクセス修飾子が与えられ、上述したインスタンス変数をそのまま返している。`public`は、クラス外部からもアクセス出来る事を意味する。つまり、`privateField`は、クラス外部からは値を取得する事のみ可能で、代入や削除等が出来ない、と言う事になる。極論言ってしまうと、クラスを用いる理由の半分以上は、この仕組みを用いるため、と言っても良いかもしれない。この`getprivateField`は一般的に`getter`と呼ばれる。
