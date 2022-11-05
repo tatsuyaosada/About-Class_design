@@ -79,7 +79,7 @@ $instance = new ClassWithPrivateField("コンストラクタに渡す値");
 $instance.hogehoge_method();
 instance.getprivateField(); /* コンストラクタで代入された「コンストラクタに渡す値」が取得される */
 ```
-</>
+</details>
 
 >> それぞれthisと言うキーワードが頻出するが、これはそのクラスそのもの(実際にはインスタンス)を示す。
   
