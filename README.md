@@ -27,7 +27,7 @@ $instance = new SomeClass();
 
 > 注意しなければならない点は、クラス変数、クラスメソッドはインスタンス変数を使った処理が出来ないと言う事。
 
-###### クラスの構造と効能
+###### クラスの構造と効能(javascriptとPHPを例として)
 
 ###### javascript
 
@@ -35,7 +35,7 @@ $instance = new SomeClass();
 class ClassWithPrivateField {
   #privateField; /* インスタンス変数 */
   
-  /* コンストラクタ、newでインスタンス化する際、実行される */
+  /* コンストラクタ、newでインスタンス化する際にコレが実行される */
   constructor(params) {
     this.#privateField = params;
   }
@@ -43,7 +43,7 @@ class ClassWithPrivateField {
    /* インスタンスメソッド */
    hogehoge_method() {}
    
-   /* インスタンス変数を取得するメソッド */
+   /* インスタンス変数を取得するメソッド(getterと呼ばれる) */
    getprivateField(){ return this.#privateField; }
 }
 
