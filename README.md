@@ -47,7 +47,8 @@ class ClassWithPrivateField {
    getprivateField(){ return this.#privateField; }
 }
 
-const instance = new ClassWithPrivateField("コンストラクタに渡す値")
+const instance = new ClassWithPrivateField("コンストラクタに渡す値");
+instance.hogehoge_method(); /* インスタンスメソッドの実行 */
 ```
 
 ```php
@@ -67,6 +68,9 @@ class ClassWithPrivateField
     /* インスタンス変数を取得するメソッド */
     public function getprivateField() { return $this->privateField; }
 }
+
+$instance = new ClassWithPrivateField("コンストラクタに渡す値");
+$instance.hogehoge_method(); /* インスタンスメソッドの実行 */
 ```
 
 > それぞれ違う言語なので仕様による多少の違いはあるが、大体こんな感じになる。と同時に、ここでクラスと言う粒度を用いる最も重要な仕様の一つが言語化されている。上記のコードのインスタンス変数は両者とも`private`と言う修飾子が与えられている。このインスタンス変数は、このクラスの外部からは全く触れる事の出来ない状態になっていると言う事になり、要はクラス外部(正確にはインスタンスの外部)からは一切触る事が出来ないため、一般的な手続き型の変数と比べ、堅牢度が高い。
