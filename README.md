@@ -128,7 +128,7 @@ $instance.privateField = "何かしらの値";
 <summary>PHPでクライアントから受け取ったリクエスト(GETとかPOSTとか)を処理して適切なレスポンスヘッダを返すクラス</summary>
 
 ```php
-class Response
+class Response extend PrevResponse
 {
 
     protected
