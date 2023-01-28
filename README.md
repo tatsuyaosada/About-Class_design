@@ -122,8 +122,10 @@ $instance.privateField = "何かしらの値";
 - `protected`::設定したクラス内部、またはそのクラスを継承したクラスでのみアクセスする事が可能
 - `private`::クラス内部のみでアクセス可能
 
+#### ここまでの内容を踏まえた上で、少し実践的なクラスの作例
+
 <details>
-<summary>(作例)クライアントから受け取ったリクエスト(GETとかPOSTとか)を処理して適切なレスポンスヘッダを返すクラス</summary>
+<summary>PHPでクライアントから受け取ったリクエスト(GETとかPOSTとか)を処理して適切なレスポンスヘッダを返すクラス</summary>
 
 ```php
 class Response
